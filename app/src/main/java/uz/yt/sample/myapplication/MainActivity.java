@@ -2,11 +2,13 @@ package uz.yt.sample.myapplication;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +25,8 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -193,6 +197,26 @@ public class MainActivity extends AppCompatActivity {
                             while ((rd = inputStream.read(buf)) != -1) {
                                 baos.write(buf, 0, rd);
                             }
+                            String result = new String(baos.toByteArray());
+                            String resultISO88591 = new String(baos.toByteArray(), java.nio.charset.StandardCharsets.ISO_8859_1);
+                            Log.d("ByteFiles1", "onActivityResult: " + result);
+                            Log.d("ByteFiles2", "onActivityResult: " + resultISO88591);
+
+                            byte[] byteArray1 = new byte[5]; // Creates a byte array of size 5
+                            byteArray1[0] = 10;
+                            byteArray1[1] = 20;
+                            byteArray1[2] = 30;
+                            byteArray1[3] = 40;
+                            byteArray1[4] = 50;
+
+                            byte[] data2 = "Hello, this is a byte array!".getBytes();
+
+                            // Example file name
+                            String fileName = "example_file2.txt";
+
+                            // Write the byte array to the file
+                            //FileHelper.writeByteArrayToFile(this, fileName, baos.toByteArray());
+
                             doSignFile(baos.toByteArray());
                         } catch (Throwable e) {
                             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -352,7 +376,6 @@ public class MainActivity extends AppCompatActivity {
                         throw new Exception("HTTP " + res.responseCode + " - " + res.responseMessage);
                     }
                     updateResultText(res.responseBody);
-
 
                     JSONObject jsonObject = new JSONObject(res.responseBody);
                     int status = jsonObject.getInt("status");
